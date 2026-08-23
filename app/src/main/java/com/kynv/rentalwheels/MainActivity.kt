@@ -26,25 +26,19 @@ class MainActivity : AppCompatActivity() {
 fun App(
     viewModel: AppViewModel = viewModel()
 ) {
-  when (val state = viewModel.appState) {
-      AppState.Loading -> {
-          // Splash/loading
-      }
+    when (val state = viewModel.appState) {
+        AppState.Loading -> {
+            // Splash/loading screen
+        }
 
-      AppState.NoInternet -> {
-//          NoInternetScreen()
-      }
+        AppState.NoInternet -> {
+            // NoInternetScreen()
+        }
 
-      AppState.Onboarding -> {
-          AppNavigation(AppRoute.Onboarding)
-      }
-
-      AppState.Login -> {
-          AppNavigation(AppRoute.Login)
-      }
-
-      AppState.Home -> {
-          AppNavigation(AppRoute.Home)
-      }
-  }
+        is AppState.Ready -> {
+            AppNavigation(
+                initialRoute = state.initialRoute,
+            )
+        }
+    }
 }

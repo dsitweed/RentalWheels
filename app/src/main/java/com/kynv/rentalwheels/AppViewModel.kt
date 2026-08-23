@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kynv.rentalwheels.navigation.AppRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -12,9 +13,7 @@ import kotlinx.coroutines.launch
 sealed interface AppState {
     data object Loading : AppState
     data object NoInternet : AppState
-    data object Onboarding : AppState
-    data object Login : AppState
-    data object Home : AppState
+    data class Ready(val initialRoute: AppRoute) : AppState
 }
 
 class AppViewModel : ViewModel() {
@@ -22,6 +21,7 @@ class AppViewModel : ViewModel() {
         private set
 
     init {
+        initialize()
     }
 
     private fun initialize() {
@@ -39,29 +39,21 @@ class AppViewModel : ViewModel() {
 
             appState = when {
                 !isConnected -> AppState.NoInternet
-                isLoggedIn -> AppState.Home
-                else -> AppState.Onboarding
+                isLoggedIn -> {
+                    AppState.Ready(AppRoute.Home)
+                }
+                else -> {
+                    AppState.Ready(AppRoute.Onboarding)
+                }
             }
         }
     }
 
     private suspend fun checkAuthStatus(): Boolean {
-        return false;
+        return false
     }
 
-    private fun isNetworkConnected(): Boolean {
-        return false;
-    }
-
-    private fun showNoInternetDialog() {
-
-    }
-
-    private fun checkAndNavigateToOnboarding() {
-
-    }
-
-    private fun navigateTo(destinationClass: Class<*>) {
-
+    private suspend fun isNetworkConnected(): Boolean {
+        return true
     }
 }
