@@ -12,7 +12,7 @@ import com.kynv.rentalwheels.features.profile.ProfileScreen
 @Composable
 fun AppNavigation(
     initialRoute: AppRoute,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) {
 
     NavHost(

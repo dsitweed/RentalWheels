@@ -1,10 +1,15 @@
 package com.kynv.rentalwheels
 
+import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.kynv.rentalwheels.navigation.AppRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +24,9 @@ sealed interface AppState {
 }
 
 @HiltViewModel
-class AppViewModel @Inject constructor() : ViewModel() {
+class AppViewModel @Inject constructor(
+    val application: Application
+) : ViewModel() {
     var appState by mutableStateOf<AppState>(AppState.Loading)
         private set
 
@@ -54,10 +61,22 @@ class AppViewModel @Inject constructor() : ViewModel() {
     }
 
     private suspend fun checkAuthStatus(): Boolean {
-        return false
+        // TODO: Compose UI -> ViewModel -> Repository -> Firebase
+        //  CheckAuthStatus logic need fix (AuthRepository)
+        return try {
+            FirebaseAuth.getInstance().currentUser != null
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    private suspend fun isNetworkConnected(): Boolean {
-        return true
+    private fun isNetworkConnected(): Boolean {
+        // TODO: not check in ViewModel
+        val cm = application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        return cm.getNetworkCapabilities(cm.activeNetwork)?.let {
+            it.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                    it.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+        } ?: false
     }
 }
