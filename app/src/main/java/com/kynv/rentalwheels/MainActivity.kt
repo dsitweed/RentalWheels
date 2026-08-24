@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kynv.rentalwheels.navigation.AppNavigation
-import com.kynv.rentalwheels.navigation.AppRoute
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

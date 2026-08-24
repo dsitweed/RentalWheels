@@ -6,9 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kynv.rentalwheels.navigation.AppRoute
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 sealed interface AppState {
     data object Loading : AppState
@@ -16,7 +18,8 @@ sealed interface AppState {
     data class Ready(val initialRoute: AppRoute) : AppState
 }
 
-class AppViewModel : ViewModel() {
+@HiltViewModel
+class AppViewModel @Inject constructor() : ViewModel() {
     var appState by mutableStateOf<AppState>(AppState.Loading)
         private set
 
@@ -42,6 +45,7 @@ class AppViewModel : ViewModel() {
                 isLoggedIn -> {
                     AppState.Ready(AppRoute.Home)
                 }
+
                 else -> {
                     AppState.Ready(AppRoute.Onboarding)
                 }
